@@ -25,7 +25,7 @@ public class Duke {
                 System.out.println("____________________________________________________________\n" +
                         "Here are the tasks in your list:");
                 for (int i = 0; i<listCounter; i++) {
-                    System.out.println( (i+1) + "." + myTasks[i].getDescription());
+                    System.out.println( (i+1) + "." + myTasks[i]);
                 }
 
             }
@@ -44,15 +44,33 @@ public class Duke {
                     myTasks[taskNumber - 1].markAsDone();
                     System.out.println("____________________________________________________________\n" +
                             "Nice! I've marked this task as done:\n" +
-                            "  [" + myTasks[taskNumber - 1].getStatusIcon() + "] " + myTasks[taskNumber - 1].getDescription() +
+                            myTasks[taskNumber - 1] +
                             "\n");
                 }
-
             }
             else if (command.startsWith("todo")){   // to do command
                 myTasks[listCounter] = new Todo(command.substring(5));
-                System.out.println(myTasks[listCounter]);
+                System.out.println("____________________________________________________________\n" +
+                        "Got it. I've added this task: \n" +
+                        myTasks[listCounter] +
+                        "\nNow you have " + (listCounter+1) + " tasks in the list.\n");
                 listCounter++;
+            }
+            else if (command.startsWith("deadline")){       // deadline command
+                int x = command.indexOf("/by");         // finds index of /by
+
+                if (x==-1){
+                    System.out.println("missing date");
+                }
+                else {
+                    myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
+                    System.out.println("____________________________________________________________\n" +
+                            "Got it. I've added this task: \n" +
+                            myTasks[listCounter] +
+                            "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                    listCounter++;
+                }
+
             }
             else {              // echo
                 System.out.println("____________________________________________________________\n" + command);
