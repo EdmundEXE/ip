@@ -21,7 +21,7 @@ public class Duke {
         String command = UserInput.nextLine();  // scan user input
 
         while (!command.equals("bye")) {     // prog doesnt end unless "bye"
-            if (command.equals("list")){
+            if (command.equals("list")){        // show list
                 System.out.println("____________________________________________________________\n" +
                         "Here are the tasks in your list:");
                 for (int i = 0; i<listCounter; i++) {
@@ -29,7 +29,7 @@ public class Duke {
                 }
 
             }
-            else if (command.startsWith("done")){
+            else if (command.startsWith("done")){       // mark tick
                 int taskNumber = Integer.parseInt(command.substring(5));
 
                 if (listCounter==0){
@@ -49,9 +49,13 @@ public class Duke {
                 }
 
             }
-            else {
-                myTasks[listCounter] = new Task(command);
+            else if (command.startsWith("todo")){   // to do command
+                myTasks[listCounter] = new Todo(command.substring(5));
+                System.out.println(myTasks[listCounter]);
                 listCounter++;
+            }
+            else {              // echo
+                System.out.println("____________________________________________________________\n" + command);
             }
             System.out.println("____________________________________________________________\n");
             command = UserInput.nextLine();
