@@ -25,7 +25,7 @@ public class Duke {
                 System.out.println("____________________________________________________________\n" +
                         "Here are the tasks in your list:");
                 for (int i = 0; i<listCounter; i++) {
-                    System.out.println( (i+1) + ". [" + myTasks[i].getStatusIcon() + "] " + myTasks[i].getDescription());
+                    System.out.println( (i+1) + "." + myTasks[i].getDescription());
                 }
 
             }
