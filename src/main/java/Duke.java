@@ -72,6 +72,22 @@ public class Duke {
                 }
 
             }
+            else if (command.startsWith("event")){       // deadline command
+                int y = command.indexOf("/at");         // finds index of /by
+
+                if (y==-1){
+                    System.out.println("missing date");
+                }
+                else {
+                    myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
+                    System.out.println("____________________________________________________________\n" +
+                            "Got it. I've added this task: \n" +
+                            myTasks[listCounter] +
+                            "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                    listCounter++;
+                }
+
+            }
             else {              // echo
                 System.out.println("____________________________________________________________\n" + command);
             }
