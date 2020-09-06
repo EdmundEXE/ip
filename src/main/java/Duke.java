@@ -113,7 +113,7 @@ public class Duke {
             } catch (UnknownCommandException e) {
                 System.out.println("This command was not programmed in me...=O\n" +
                         "____________________________________________________________\n");
-=======
+
         while (!command.equals("bye")) {     // prog doesnt end unless "bye"
             if (command.equals("list")){        // show list
                 System.out.println("____________________________________________________________\n" +
