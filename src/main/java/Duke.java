@@ -7,41 +7,150 @@ public class Duke {
         int listCounter = 0;
         Task[] myTasks = new Task[100];
 
-        printStartMessage();
+        String logo = " ____        _        \n"
+                + "|  _ \\ _   _| | _____ \n"
+                + "| | | | | | | |/ / _ \\\n"
+                + "| |_| | |_| |   <  __/\n"
+                + "|____/ \\__,_|_|\\_\\___|\n";
+        System.out.println("Hello from\n" + logo);
+        System.out.println("____________________________________________________________\n" +
+                " Hello! I'm Duke\n" +
+                " What can I do for you?\n" +
+                "____________________________________________________________\n");
 
-        String command = UserInput.nextLine();  // scan user input
 
+<<<<<<< HEAD
+
+        while(true) {
+            String command = UserInput.nextLine();  // scan user input
+            try {
+                while (!command.equals("bye")) {     // prog doesnt end unless "bye"
+                    System.out.println("____________________________________________________________\n");
+
+                    if (command.equals("list")) {        // show list
+                        if (listCounter == 0) {         // Error: empty list
+                            throw new EmptyListException();
+                        }
+                        System.out.println("Here are the tasks in your list:");
+                        for (int i = 0; i<listCounter; i++) {
+                            System.out.println( (i+1) + "." + myTasks[i]);
+                        }
+
+                    } else if (command.startsWith("done")) {       // mark tick
+                        int taskNumber = Integer.parseInt(command.substring(5));
+
+                        if (listCounter==0){            // Error: empty list
+                            throw new EmptyListException();
+                        }
+                        else if ( (taskNumber<=0) || (taskNumber>(listCounter))) {       // Error: wrong task number
+                            throw new InvalidTaskNumber();
+                        } else {
+                            myTasks[taskNumber - 1].markAsDone();
+                            System.out.println("Nice! I've marked this task as done:\n" +
+                                    myTasks[taskNumber - 1] +
+                                    "\n");
+                        }
+                    } else if (command.startsWith("todo")) {   // to do command
+                        if (command.length() <= 5) {       // Error: missing details
+                            throw new InsufficientDescriptionException();
+                        }
+                        myTasks[listCounter] = new Todo(command.substring(5));
+                        System.out.println("Got it. I've added this task: \n" +
+                                myTasks[listCounter] +
+                                "\nNow you have " + (listCounter+1) + " tasks in the list.\n");
+                        listCounter++;
+                    } else if (command.startsWith("deadline")) {       // deadline command
+                        int x = command.indexOf("/by");         // finds index of /by
+
+                        if ( (x==-1) || (command.length() <= 9) ){
+                            throw new InsufficientDescriptionException();
+                        } else {
+                            myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
+                            System.out.println("Got it. I've added this task: \n" +
+                                    myTasks[listCounter] +
+                                    "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                            listCounter++;
+                        }
+
+                    } else if (command.startsWith("event")){       // event command
+                        int y = command.indexOf("/at");         // finds index of /at
+
+                        if ( (y==-1) || (command.length() <= 6)){
+                            throw new InsufficientDescriptionException();
+                        } else {
+                            myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
+                            System.out.println("Got it. I've added this task: \n" +
+                                    myTasks[listCounter] +
+                                    "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                            listCounter++;
+                        }
+
+                    } else {              // Error Unknown Command
+                        throw new UnknownCommandException();
+                    }
+
+                    System.out.println("____________________________________________________________\n");
+                    command = UserInput.nextLine();
+                }
+
+                System.out.println("____________________________________________________________\n" +
+                        "Bye. Hope to see you again soon!\n" +
+                        "____________________________________________________________");
+
+            } catch (EmptyListException e) {
+                System.out.println("Empty list. Add something!\n" +
+                        "____________________________________________________________\n");
+
+
+            } catch (InvalidTaskNumber e) {
+                System.out.println("Invalid Task Number!!!\n" +
+                        "____________________________________________________________\n");
+
+            } catch (InsufficientDescriptionException e) {
+                System.out.println("Hmmm....You didn't add any details...\n" +
+                        "____________________________________________________________\n");
+
+            } catch (UnknownCommandException e) {
+                System.out.println("This command was not programmed in me...=O\n" +
+                        "____________________________________________________________\n");
+=======
         while (!command.equals("bye")) {     // prog doesnt end unless "bye"
-            System.out.println("____________________________________________________________\n");
-
             if (command.equals("list")){        // show list
-                System.out.println("Here are the tasks in your list:");
+                System.out.println("____________________________________________________________\n" +
+                        "Here are the tasks in your list:");
                 for (int i = 0; i<listCounter; i++) {
                     System.out.println( (i+1) + "." + myTasks[i]);
                 }
 
-            } else if (command.startsWith("done")){       // mark tick
+            }
+            else if (command.startsWith("done")){       // mark tick
                 int taskNumber = Integer.parseInt(command.substring(5));
 
                 if (listCounter==0){
-                    System.out.println("List empty!");
+                    System.out.println("____________________________________________________________\n" +
+                            "List empty!");
                 }
                 else if (taskNumber<=0) {
-                    System.out.println("Invalid Number!!");
+                    System.out.println("____________________________________________________________\n" +
+                            "Invalid Number!!");
                 }
                 else {
                     myTasks[taskNumber - 1].markAsDone();
-                    System.out.println("Nice! I've marked this task as done:\n" +
+                    System.out.println("____________________________________________________________\n" +
+                            "Nice! I've marked this task as done:\n" +
                             myTasks[taskNumber - 1] +
                             "\n");
                 }
-            } else if (command.startsWith("todo")){   // to do command
+            }
+            else if (command.startsWith("todo")){   // to do command
                 myTasks[listCounter] = new Todo(command.substring(5));
-                System.out.println("Got it. I've added this task: \n" +
+                System.out.println("____________________________________________________________\n" +
+                        "Got it. I've added this task: \n" +
                         myTasks[listCounter] +
                         "\nNow you have " + (listCounter+1) + " tasks in the list.\n");
                 listCounter++;
-            } else if (command.startsWith("deadline")){       // deadline command
+            }
+            else if (command.startsWith("deadline")){       // deadline command
                 int x = command.indexOf("/by");         // finds index of /by
 
                 if (x==-1){
@@ -49,13 +158,15 @@ public class Duke {
                 }
                 else {
                     myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
-                    System.out.println("Got it. I've added this task: \n" +
+                    System.out.println("____________________________________________________________\n" +
+                            "Got it. I've added this task: \n" +
                             myTasks[listCounter] +
                             "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
                     listCounter++;
                 }
 
-            } else if (command.startsWith("event")){       // deadline command
+            }
+            else if (command.startsWith("event")){       // deadline command
                 int y = command.indexOf("/at");         // finds index of /by
 
                 if (y==-1){
@@ -63,25 +174,27 @@ public class Duke {
                 }
                 else {
                     myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
-                    System.out.println("Got it. I've added this task: \n" +
+                    System.out.println("____________________________________________________________\n" +
+                            "Got it. I've added this task: \n" +
                             myTasks[listCounter] +
                             "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
                     listCounter++;
                 }
 
-            } else {              // echo
-                System.out.println(command);
             }
-
+            else {              // echo
+                System.out.println("____________________________________________________________\n" + command);
+            }
             System.out.println("____________________________________________________________\n");
             command = UserInput.nextLine();
         }
+>>>>>>> parent of ec7b2b3... add printStartMessage()
 
-        System.out.println("____________________________________________________________\n" +
-                "Bye. Hope to see you again soon!\n" +
-                "____________________________________________________________");
+            }
+        }
     }
 
+<<<<<<< HEAD
     public static void printStartMessage() {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -96,4 +209,7 @@ public class Duke {
 
     }
 
+
+=======
+>>>>>>> parent of ec7b2b3... add printStartMessage()
 }
