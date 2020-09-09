@@ -9,77 +9,100 @@ public class Duke {
 
         printStartMessage();
 
-        String command = UserInput.nextLine();  // scan user input
+        while (true) {
+            String command = UserInput.nextLine();  // scan user input
+            try {
+                while (!command.equals("bye")) {     // prog doesnt end unless "bye"
+                    System.out.println("____________________________________________________________\n");
 
-        while (!command.equals("bye")) {     // prog doesnt end unless "bye"
-            System.out.println("____________________________________________________________\n");
+                    if (command.equals("list")) {        // show list
+                        if (listCounter == 0) {         // Error: empty list
+                            throw new EmptyListException();
+                        }
+                        System.out.println("Here are the tasks in your list:");
+                        for (int i = 0; i < listCounter; i++) {
+                            System.out.println((i + 1) + "." + myTasks[i]);
+                        }
 
-            if (command.equals("list")){        // show list
-                System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i<listCounter; i++) {
-                    System.out.println( (i+1) + "." + myTasks[i]);
+                    } else if (command.startsWith("done")) {       // mark tick
+                        int taskNumber = Integer.parseInt(command.substring(5));
+
+                        if (listCounter == 0) {            // Error: empty list
+                            throw new EmptyListException();
+                        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
+                            throw new InvalidTaskNumber();
+                        } else {
+                            myTasks[taskNumber - 1].markAsDone();
+                            System.out.println("Nice! I've marked this task as done:\n" +
+                                    myTasks[taskNumber - 1] +
+                                    "\n");
+                        }
+                    } else if (command.startsWith("todo")) {   // to do command
+                        if (command.length() <= 5) {       // Error: missing details
+                            throw new InsufficientDescriptionException();
+                        }
+                        myTasks[listCounter] = new Todo(command.substring(5));
+                        System.out.println("Got it. I've added this task: \n" +
+                                myTasks[listCounter] +
+                                "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                        listCounter++;
+                    } else if (command.startsWith("deadline")) {       // deadline command
+                        int x = command.indexOf("/by");         // finds index of /by
+
+                        if ((x == -1) || (command.length() <= 9)) {
+                            throw new InsufficientDescriptionException();
+                        } else {
+                            myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
+                            System.out.println("Got it. I've added this task: \n" +
+                                    myTasks[listCounter] +
+                                    "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                            listCounter++;
+                        }
+
+                    } else if (command.startsWith("event")) {       // event command
+                        int y = command.indexOf("/at");         // finds index of /at
+
+                        if ((y == -1) || (command.length() <= 6)) {
+                            throw new InsufficientDescriptionException();
+                        } else {
+                            myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
+                            System.out.println("Got it. I've added this task: \n" +
+                                    myTasks[listCounter] +
+                                    "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                            listCounter++;
+                        }
+
+                    } else {              // Error Unknown Command
+                        throw new UnknownCommandException();
+                    }
+
+                    System.out.println("____________________________________________________________\n");
+                    command = UserInput.nextLine();
                 }
 
-            } else if (command.startsWith("done")){       // mark tick
-                int taskNumber = Integer.parseInt(command.substring(5));
+                System.out.println("____________________________________________________________\n" +
+                        "Bye. Hope to see you again soon!\n" +
+                        "____________________________________________________________");
+                break;
 
-                if (listCounter==0){
-                    System.out.println("List empty!");
-                }
-                else if (taskNumber<=0) {
-                    System.out.println("Invalid Number!!");
-                }
-                else {
-                    myTasks[taskNumber - 1].markAsDone();
-                    System.out.println("Nice! I've marked this task as done:\n" +
-                            myTasks[taskNumber - 1] +
-                            "\n");
-                }
-            } else if (command.startsWith("todo")){   // to do command
-                myTasks[listCounter] = new Todo(command.substring(5));
-                System.out.println("Got it. I've added this task: \n" +
-                        myTasks[listCounter] +
-                        "\nNow you have " + (listCounter+1) + " tasks in the list.\n");
-                listCounter++;
-            } else if (command.startsWith("deadline")){       // deadline command
-                int x = command.indexOf("/by");         // finds index of /by
+            } catch (EmptyListException e) {
+                System.out.println("Empty list. Add something!\n" +
+                        "____________________________________________________________\n");
 
-                if (x==-1){
-                    System.out.println("missing date");
-                }
-                else {
-                    myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
-                    System.out.println("Got it. I've added this task: \n" +
-                            myTasks[listCounter] +
-                            "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
-                    listCounter++;
-                }
 
-            } else if (command.startsWith("event")){       // deadline command
-                int y = command.indexOf("/at");         // finds index of /by
+            } catch (InvalidTaskNumber e) {
+                System.out.println("Invalid Task Number!!!\n" +
+                        "____________________________________________________________\n");
 
-                if (y==-1){
-                    System.out.println("missing date");
-                }
-                else {
-                    myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
-                    System.out.println("Got it. I've added this task: \n" +
-                            myTasks[listCounter] +
-                            "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
-                    listCounter++;
-                }
+            } catch (InsufficientDescriptionException e) {
+                System.out.println("Hmmm....You didn't add any details...\n" +
+                        "____________________________________________________________\n");
 
-            } else {              // echo
-                System.out.println(command);
+            } catch (UnknownCommandException e) {
+                System.out.println("This command was not programmed in me...=O\n" +
+                        "____________________________________________________________\n");
             }
-
-            System.out.println("____________________________________________________________\n");
-            command = UserInput.nextLine();
         }
-
-        System.out.println("____________________________________________________________\n" +
-                "Bye. Hope to see you again soon!\n" +
-                "____________________________________________________________");
     }
 
     public static void printStartMessage() {
@@ -95,5 +118,4 @@ public class Duke {
                 "____________________________________________________________\n");
 
     }
-
 }
