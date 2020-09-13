@@ -1,11 +1,12 @@
-
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Duke {
     public static void main(String[] args) {
         Scanner UserInput = new Scanner(System.in);
         int listCounter = 0;
-        Task[] myTasks = new Task[100];
+        ArrayList<Task> myTasks = new ArrayList<>();
 
         printStartMessage();
 
@@ -21,7 +22,7 @@ public class Duke {
                         }
                         System.out.println("Here are the tasks in your list:");
                         for (int i = 0; i < listCounter; i++) {
-                            System.out.println((i + 1) + "." + myTasks[i]);
+                            System.out.println((i + 1) + "." + myTasks.get(i));
                         }
 
                     } else if (command.startsWith("done")) {       // mark tick
@@ -32,18 +33,18 @@ public class Duke {
                         } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
                             throw new InvalidTaskNumber();
                         } else {
-                            myTasks[taskNumber - 1].markAsDone();
+                            myTasks.get(taskNumber - 1).markAsDone();
                             System.out.println("Nice! I've marked this task as done:\n" +
-                                    myTasks[taskNumber - 1] +
+                                    myTasks.get(taskNumber - 1) +
                                     "\n");
                         }
                     } else if (command.startsWith("todo")) {   // to do command
                         if (command.length() <= 5) {       // Error: missing details
                             throw new InsufficientDescriptionException();
                         }
-                        myTasks[listCounter] = new Todo(command.substring(5));
+                        myTasks.add(new Todo(command.substring(5)));
                         System.out.println("Got it. I've added this task: \n" +
-                                myTasks[listCounter] +
+                                myTasks.get(listCounter) +
                                 "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
                         listCounter++;
                     } else if (command.startsWith("deadline")) {       // deadline command
@@ -52,9 +53,9 @@ public class Duke {
                         if ((x == -1) || (command.length() <= 9)) {
                             throw new InsufficientDescriptionException();
                         } else {
-                            myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
+                            myTasks.add(new Deadline(command.substring(9, x), command.substring(x + 4)));
                             System.out.println("Got it. I've added this task: \n" +
-                                    myTasks[listCounter] +
+                                    myTasks.get(listCounter) +
                                     "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
                             listCounter++;
                         }
@@ -65,13 +66,28 @@ public class Duke {
                         if ((y == -1) || (command.length() <= 6)) {
                             throw new InsufficientDescriptionException();
                         } else {
-                            myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
+                            myTasks.add(new Event(command.substring(6, y), command.substring(y + 4)));
                             System.out.println("Got it. I've added this task: \n" +
-                                    myTasks[listCounter] +
+                                    myTasks.get(listCounter) +
                                     "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
                             listCounter++;
                         }
 
+                    } else if (command.startsWith("delete")) {
+                        int taskNumber = Integer.parseInt(command.substring(7));
+
+                        if (listCounter == 0) {            // Error: empty list
+                            throw new EmptyListException();
+                        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
+                            throw new InvalidTaskNumber();
+                        } else {
+
+                            System.out.println("Noted! I've removed this task:\n" +
+                                    myTasks.get(taskNumber - 1) +
+                                    "\nNow you have " + (listCounter-1) + " tasks left.");
+                            myTasks.remove(taskNumber - 1);
+                            listCounter--;
+                        }
                     } else {              // Error Unknown Command
                         throw new UnknownCommandException();
                     }
