@@ -3,6 +3,7 @@ import duke.tasks.*;
 import duke.exceptions.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +25,7 @@ public class Duke {
         try {
             System.out.println("Here are the tasks on your list:\n");
             readFile("data/tasks.txt");
+
             System.out.println("____________________________________________________________\n");
         } catch (FileNotFoundException e) {
             System.out.println("No task.txt found...creating a text file...\n");
@@ -191,13 +193,43 @@ public class Duke {
 
     }
 
-    private static void readFile(String pathName) throws FileNotFoundException {
+    private static void readFile(String pathName) throws FileNotFoundException {    // read and add to current list in Duke
         File f = new File(pathName);
         Scanner s = new Scanner(f);
-        while (s.hasNext()) {
-            System.out.println(s.nextLine());
-        }
 
+        while (s.hasNext()) {
+            String fileOutputLine = s.nextLine();
+            System.out.println(fileOutputLine);
+            String[] textDescription = fileOutputLine.split(" \\| ",-1);
+
+            switch (textDescription[0]) {       // take in the first letter
+            case "T":
+                myTasks.add(new Todo(textDescription[2]));
+                if (textDescription[1].equals("1")) {
+                    myTasks.get(listCounter).markAsDone();
+                }
+                listCounter++;
+                break;
+            case "D":
+                myTasks.add(new Deadline(textDescription[2], textDescription[3]));
+                if (textDescription[1].equals("1")) {
+                    myTasks.get(listCounter).markAsDone();
+                }
+                listCounter++;
+                break;
+            case "E":
+                myTasks.add(new Event(textDescription[2], textDescription[3]));
+                if (textDescription[1].equals("1")) {
+                    myTasks.get(listCounter).markAsDone();
+                }
+                listCounter++;
+                break;
+            default:
+                break;
+            }
+
+
+        }
     }
 
     private static String translateIntoText(int mode, String description) {
@@ -206,19 +238,19 @@ public class Duke {
 
         switch (mode) {
         case 0:         // to do
-            return "T | " + boolToNumber + " | " +  description;
+            return "T | " + boolToNumber + " | " +  description;        // T | 1 | blabla
         case 1:         // deadline
             description = description.replace("/by","|");
-            return "D | " + boolToNumber + " | " + description;
+            return "D | " + boolToNumber + " | " + description;         // D | 1 | blabla | 2222
         default:        // event
             description = description.replace("/at","|");
-            return "E | " + boolToNumber + " | " + description;
+            return "E | " + boolToNumber + " | " + description;         // E | 1 | blablabla | 3333
         }
     }
 
     private static void appendFile(String pathName, String textToAdd) throws IOException {
         FileWriter fw = new FileWriter(pathName, true);
-        fw.write(textToAdd + "\n");
+        fw.write("\n" + textToAdd);
         fw.close();
     }
 

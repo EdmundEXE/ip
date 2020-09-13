@@ -1,2 +1,3 @@
-T | 0 | toilet
+
 E | 0 | toilet | 2300
+T | 0 | weweweee
