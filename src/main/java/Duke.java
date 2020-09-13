@@ -1,5 +1,9 @@
 
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Duke {
     public static void main(String[] args) {
@@ -7,11 +11,20 @@ public class Duke {
         int listCounter = 0;
         Task[] myTasks = new Task[100];
 
+
+
         printStartMessage();
+        try {
+            readFile("data/tasks.txt");
+            System.out.println("____________________________________________________________\n");
+        } catch (FileNotFoundException e) {
+            System.out.println("No task.txt found");
+        }
 
         while (true) {
             String command = UserInput.nextLine();  // scan user input
             try {
+
                 while (!command.equals("bye")) {     // prog doesnt end unless "bye"
                     System.out.println("____________________________________________________________\n");
 
@@ -42,6 +55,7 @@ public class Duke {
                             throw new InsufficientDescriptionException();
                         }
                         myTasks[listCounter] = new Todo(command.substring(5));
+                        appendFile("data/tasks.txt", command.substring(5));
                         System.out.println("Got it. I've added this task: \n" +
                                 myTasks[listCounter] +
                                 "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
@@ -53,6 +67,7 @@ public class Duke {
                             throw new InsufficientDescriptionException();
                         } else {
                             myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
+                            appendFile("data/tasks.txt", command.substring(9));
                             System.out.println("Got it. I've added this task: \n" +
                                     myTasks[listCounter] +
                                     "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
@@ -65,6 +80,7 @@ public class Duke {
                         if ((y == -1) || (command.length() <= 6)) {
                             throw new InsufficientDescriptionException();
                         } else {
+                            appendFile("data/tasks.txt", command.substring(6));
                             myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
                             System.out.println("Got it. I've added this task: \n" +
                                     myTasks[listCounter] +
@@ -83,7 +99,8 @@ public class Duke {
                 System.out.println("____________________________________________________________\n" +
                         "Bye. Hope to see you again soon!\n" +
                         "____________________________________________________________");
-                break;
+
+               break;
 
             } catch (EmptyListException e) {
                 System.out.println("Empty list. Add something!\n" +
@@ -101,7 +118,11 @@ public class Duke {
             } catch (UnknownCommandException e) {
                 System.out.println("This command was not programmed in me...=O\n" +
                         "____________________________________________________________\n");
+            } catch (IOException e) {
+                System.out.println("Error writing to file!\n" +
+                        "____________________________________________________________\n");
             }
+
         }
     }
 
@@ -118,4 +139,21 @@ public class Duke {
                 "____________________________________________________________\n");
 
     }
+
+    private static void readFile(String pathName) throws FileNotFoundException {
+        File f = new File(pathName);
+        Scanner s = new Scanner(f);
+        while (s.hasNext()) {
+            System.out.println(s.nextLine());
+        }
+
+    }
+
+    private static void appendFile(String pathName, String textToAdd) throws IOException {
+        FileWriter fw = new FileWriter(pathName, true);
+        fw.write(textToAdd + "\n");
+        fw.close();
+    }
+
+
 }
