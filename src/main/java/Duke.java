@@ -1,5 +1,9 @@
 
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Duke {
     public static void main(String[] args) {
@@ -7,79 +11,119 @@ public class Duke {
         int listCounter = 0;
         Task[] myTasks = new Task[100];
 
+
+
         printStartMessage();
-
-        String command = UserInput.nextLine();  // scan user input
-
-        while (!command.equals("bye")) {     // prog doesnt end unless "bye"
+        try {
+            readFile("data/tasks.txt");
             System.out.println("____________________________________________________________\n");
-
-            if (command.equals("list")){        // show list
-                System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i<listCounter; i++) {
-                    System.out.println( (i+1) + "." + myTasks[i]);
-                }
-
-            } else if (command.startsWith("done")){       // mark tick
-                int taskNumber = Integer.parseInt(command.substring(5));
-
-                if (listCounter==0){
-                    System.out.println("List empty!");
-                }
-                else if (taskNumber<=0) {
-                    System.out.println("Invalid Number!!");
-                }
-                else {
-                    myTasks[taskNumber - 1].markAsDone();
-                    System.out.println("Nice! I've marked this task as done:\n" +
-                            myTasks[taskNumber - 1] +
-                            "\n");
-                }
-            } else if (command.startsWith("todo")){   // to do command
-                myTasks[listCounter] = new Todo(command.substring(5));
-                System.out.println("Got it. I've added this task: \n" +
-                        myTasks[listCounter] +
-                        "\nNow you have " + (listCounter+1) + " tasks in the list.\n");
-                listCounter++;
-            } else if (command.startsWith("deadline")){       // deadline command
-                int x = command.indexOf("/by");         // finds index of /by
-
-                if (x==-1){
-                    System.out.println("missing date");
-                }
-                else {
-                    myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
-                    System.out.println("Got it. I've added this task: \n" +
-                            myTasks[listCounter] +
-                            "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
-                    listCounter++;
-                }
-
-            } else if (command.startsWith("event")){       // deadline command
-                int y = command.indexOf("/at");         // finds index of /by
-
-                if (y==-1){
-                    System.out.println("missing date");
-                }
-                else {
-                    myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
-                    System.out.println("Got it. I've added this task: \n" +
-                            myTasks[listCounter] +
-                            "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
-                    listCounter++;
-                }
-
-            } else {              // echo
-                System.out.println(command);
-            }
-
-            System.out.println("____________________________________________________________\n");
-            command = UserInput.nextLine();
+        } catch (FileNotFoundException e) {
+            System.out.println("No task.txt found");
         }
 
-        System.out.println("____________________________________________________________\n" +
-                "Bye. Hope to see you again soon!\n" +
-                "____________________________________________________________");
+        while (true) {
+            String command = UserInput.nextLine();  // scan user input
+            try {
+
+                while (!command.equals("bye")) {     // prog doesnt end unless "bye"
+                    System.out.println("____________________________________________________________\n");
+
+                    if (command.equals("list")) {        // show list
+                        if (listCounter == 0) {         // Error: empty list
+                            throw new EmptyListException();
+                        }
+                        System.out.println("Here are the tasks in your list:");
+                        for (int i = 0; i < listCounter; i++) {
+                            System.out.println((i + 1) + "." + myTasks[i]);
+                        }
+
+                    } else if (command.startsWith("done")) {       // mark tick
+                        int taskNumber = Integer.parseInt(command.substring(5));
+
+                        if (listCounter == 0) {            // Error: empty list
+                            throw new EmptyListException();
+                        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
+                            throw new InvalidTaskNumber();
+                        } else {
+                            myTasks[taskNumber - 1].markAsDone();
+                            System.out.println("Nice! I've marked this task as done:\n" +
+                                    myTasks[taskNumber - 1] +
+                                    "\n");
+                        }
+                    } else if (command.startsWith("todo")) {   // to do command
+                        if (command.length() <= 5) {       // Error: missing details
+                            throw new InsufficientDescriptionException();
+                        }
+                        myTasks[listCounter] = new Todo(command.substring(5));
+                        appendFile("data/tasks.txt", command.substring(5));
+                        System.out.println("Got it. I've added this task: \n" +
+                                myTasks[listCounter] +
+                                "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                        listCounter++;
+                    } else if (command.startsWith("deadline")) {       // deadline command
+                        int x = command.indexOf("/by");         // finds index of /by
+
+                        if ((x == -1) || (command.length() <= 9)) {
+                            throw new InsufficientDescriptionException();
+                        } else {
+                            myTasks[listCounter] = new Deadline(command.substring(9, x), command.substring(x + 4));
+                            appendFile("data/tasks.txt", command.substring(9));
+                            System.out.println("Got it. I've added this task: \n" +
+                                    myTasks[listCounter] +
+                                    "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                            listCounter++;
+                        }
+
+                    } else if (command.startsWith("event")) {       // event command
+                        int y = command.indexOf("/at");         // finds index of /at
+
+                        if ((y == -1) || (command.length() <= 6)) {
+                            throw new InsufficientDescriptionException();
+                        } else {
+                            appendFile("data/tasks.txt", command.substring(6));
+                            myTasks[listCounter] = new Event(command.substring(6, y), command.substring(y + 4));
+                            System.out.println("Got it. I've added this task: \n" +
+                                    myTasks[listCounter] +
+                                    "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
+                            listCounter++;
+                        }
+
+                    } else {              // Error Unknown Command
+                        throw new UnknownCommandException();
+                    }
+
+                    System.out.println("____________________________________________________________\n");
+                    command = UserInput.nextLine();
+                }
+
+                System.out.println("____________________________________________________________\n" +
+                        "Bye. Hope to see you again soon!\n" +
+                        "____________________________________________________________");
+
+               break;
+
+            } catch (EmptyListException e) {
+                System.out.println("Empty list. Add something!\n" +
+                        "____________________________________________________________\n");
+
+
+            } catch (InvalidTaskNumber e) {
+                System.out.println("Invalid Task Number!!!\n" +
+                        "____________________________________________________________\n");
+
+            } catch (InsufficientDescriptionException e) {
+                System.out.println("Hmmm....You didn't add any details...\n" +
+                        "____________________________________________________________\n");
+
+            } catch (UnknownCommandException e) {
+                System.out.println("This command was not programmed in me...=O\n" +
+                        "____________________________________________________________\n");
+            } catch (IOException e) {
+                System.out.println("Error writing to file!\n" +
+                        "____________________________________________________________\n");
+            }
+
+        }
     }
 
     public static void printStartMessage() {
@@ -95,5 +139,21 @@ public class Duke {
                 "____________________________________________________________\n");
 
     }
+
+    private static void readFile(String pathName) throws FileNotFoundException {
+        File f = new File(pathName);
+        Scanner s = new Scanner(f);
+        while (s.hasNext()) {
+            System.out.println(s.nextLine());
+        }
+
+    }
+
+    private static void appendFile(String pathName, String textToAdd) throws IOException {
+        FileWriter fw = new FileWriter(pathName, true);
+        fw.write(textToAdd + "\n");
+        fw.close();
+    }
+
 
 }
