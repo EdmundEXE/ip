@@ -13,6 +13,9 @@ public class Duke {
 
     public static int listCounter = 0;
     public static ArrayList<Task> myTasks = new ArrayList<>();
+    public final static int TASK_INTEGER = 0;
+    public final static int DEADLINE_INTEGER = 1;
+    public final static int EVENT_INTEGER = 2;
 
     public static void main(String[] args) {
 
@@ -44,15 +47,15 @@ public class Duke {
                     break;
                 case "todo":
                     todoCommand(command[1]);
-                    appendFile("data/tasks.txt", command[1]);
+                    appendFile("data/tasks.txt", translateIntoText(TASK_INTEGER, command[1]));
                     break;
                 case "deadline":
                     deadlineCommand(command[1]);
-                    appendFile("data/tasks.txt", command[1]);
+                    appendFile("data/tasks.txt", translateIntoText(DEADLINE_INTEGER, command[1]));
                     break;
                 case "event":
                     eventCommand(command[1]);
-                    appendFile("data/tasks.txt", command[1]);
+                    appendFile("data/tasks.txt", translateIntoText(EVENT_INTEGER, command[1]));
                     break;
                 case "delete":
                     taskNumber = Integer.parseInt(command[1]);
@@ -195,6 +198,22 @@ public class Duke {
             System.out.println(s.nextLine());
         }
 
+    }
+
+    private static String translateIntoText(int mode, String description) {
+
+        int boolToNumber = myTasks.get(listCounter-1).getIsDone() ? 1 : 0;
+
+        switch (mode) {
+        case 0:         // to do
+            return "T | " + boolToNumber + " | " +  description;
+        case 1:         // deadline
+            description = description.replace("/by","|");
+            return "D | " + boolToNumber + " | " + description;
+        default:        // event
+            description = description.replace("/at","|");
+            return "E | " + boolToNumber + " | " + description;
+        }
     }
 
     private static void appendFile(String pathName, String textToAdd) throws IOException {

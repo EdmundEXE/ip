@@ -1,7 +1,2 @@
-hi
-bob
-gill
-qqqqqq
-wwwww /at 2200
-eeeee /by 2300
-powfwa
+T | 0 | toilet
+E | 0 | toilet | 2300
