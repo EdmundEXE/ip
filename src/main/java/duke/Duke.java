@@ -2,6 +2,8 @@ package duke;
 import duke.tasks.*;
 import duke.exceptions.*;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -9,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 
 public class Duke {
 
@@ -23,15 +26,24 @@ public class Duke {
         printStartMessage();
 
         try {
-            System.out.println("Here are the tasks on your list:\n");
-            readFile("data/tasks.txt");
+            File f = new File("tasks.txt");
 
-            System.out.println("____________________________________________________________\n");
-        } catch (FileNotFoundException e) {
-            System.out.println("No task.txt found...creating a text file...\n");
-            File f = new File("data/tasks.txt");        // creating a new file?
+            if (!f.exists()) {
+                System.out.println("Cannot find file..... Creating one...\n" +
+                        "____________________________________________________________\n");
+                f.createNewFile();
+            } else {
+                System.out.println("Here are the tasks on your list:\n");
+                readFile("tasks.txt");
+                System.out.println("____________________________________________________________\n");
 
+            }
+
+        }  catch (IOException e) {
+            System.out.println("Cannot create file!!! Exception Occured: ");
+            e.printStackTrace();
         }
+
         Scanner UserInput = new Scanner(System.in);
 
         while (true) {
@@ -49,19 +61,53 @@ public class Duke {
                     break;
                 case "todo":
                     todoCommand(command[1]);
-                    appendFile("data/tasks.txt", translateIntoText(TASK_INTEGER, command[1]));
+                    int boolToNumber = myTasks.get(listCounter-1).getIsDone() ? 1 : 0;
+                    appendFile("tasks.txt", translateIntoText(TASK_INTEGER,boolToNumber, command[1]));
                     break;
                 case "deadline":
                     deadlineCommand(command[1]);
-                    appendFile("data/tasks.txt", translateIntoText(DEADLINE_INTEGER, command[1]));
+                    boolToNumber = myTasks.get(listCounter-1).getIsDone() ? 1 : 0;
+                    appendFile("tasks.txt", translateIntoText(DEADLINE_INTEGER,boolToNumber, command[1]));
                     break;
                 case "event":
                     eventCommand(command[1]);
-                    appendFile("data/tasks.txt", translateIntoText(EVENT_INTEGER, command[1]));
+                    boolToNumber = myTasks.get(listCounter-1).getIsDone() ? 1 : 0;
+                    appendFile("tasks.txt", translateIntoText(EVENT_INTEGER,boolToNumber, command[1]));
                     break;
                 case "delete":
                     taskNumber = Integer.parseInt(command[1]);
                     deleteCommand(taskNumber);
+                    File temp = new File("temp.txt");
+                    temp.createNewFile();
+                    File original = new File("tasks.txt");
+                    String s2;
+                    int mode;
+
+                    for (int i = 0; i < listCounter; i++) {
+                        String s1 = String.valueOf(myTasks.get(i)).substring(1, 2);
+                        boolToNumber = myTasks.get(i).getIsDone() ? 1 : 0;
+
+
+                        switch (s1) {
+                        case "T":       // [T][?] blabla
+                            s2 = myTasks.get(i).toString().substring(6);
+                            mode = 0;
+                            break;
+                        case "D":        // E or D
+                            s2 = myTasks.get(i).toString().substring(6).replace("by:", "/by");
+                            mode = 1;
+                            break;
+                        default:
+                            s2 = myTasks.get(i).toString().substring(6).replace("at:", "/at");
+                            mode = 2;
+                            break;
+                        }
+
+                        appendFile("temp.txt", translateIntoText(mode,boolToNumber,s2));
+                    }
+                    original.delete();
+                    temp.renameTo(original);
+
                     break;
                 case "bye":
                     byeCommand();
@@ -172,6 +218,7 @@ public class Duke {
     }
 
     private static void deleteCommand(int taskNumber) throws EmptyListException, InvalidTaskNumber {
+
         if (listCounter == 0) {            // Error: empty list
             throw new EmptyListException();
         } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
@@ -230,11 +277,10 @@ public class Duke {
 
 
         }
+
     }
 
-    private static String translateIntoText(int mode, String description) {
-
-        int boolToNumber = myTasks.get(listCounter-1).getIsDone() ? 1 : 0;
+    private static String translateIntoText(int mode, int boolToNumber, String description) {
 
         switch (mode) {
         case 0:         // to do
