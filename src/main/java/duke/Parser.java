@@ -5,8 +5,6 @@ import duke.tasks.*;
 import duke.exceptions.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import duke.TaskList;
 
 import static duke.Duke.listCounter;
 import static duke.Storage.*;
