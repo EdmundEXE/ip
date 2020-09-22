@@ -146,14 +146,14 @@ public class Parser {
 
     }
 
-    private static void deadlineCommand(String description, TaskList tasks) throws InsufficientDescriptionException {
+    private static void deadlineCommand(String input, TaskList tasks) throws InsufficientDescriptionException {
 
-        int x = description.indexOf("/by");         // finds index of /by
+        String[] description = input.split("/by ");         // finds index of /by
 
-        if (x == -1) {          // no /by found
+        if (description.length == 1 || description[1].isEmpty()) {          // no /by found
             throw new InsufficientDescriptionException();
         } else {
-            tasks.add(new Deadline(description.substring(0, x), description.substring(x + 4)));
+            tasks.add(new Deadline(description[0], description[1]));
             System.out.println("Got it. I've added this task: \n" +
                     tasks.get(listCounter) +
                     "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
@@ -161,14 +161,14 @@ public class Parser {
         }
     }
 
-    private static void eventCommand(String description, TaskList tasks) throws InsufficientDescriptionException{
+    private static void eventCommand(String input, TaskList tasks) throws InsufficientDescriptionException{
 
-        int y = description.indexOf("/at");         // finds index of /at
+        String[] description = input.split("/at ");      // finds index of /at
 
-        if (y == -1) {
+        if (description.length == 1 || description[1].isEmpty()) {
             throw new InsufficientDescriptionException();
         } else {
-            tasks.add(new Event(description.substring(0, y), description.substring(y + 4)));
+            tasks.add(new Event(description[0], description[1]));
             System.out.println("Got it. I've added this task: \n" +
                     tasks.get(listCounter) +
                     "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");

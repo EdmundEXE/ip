@@ -35,9 +35,9 @@ public class Duke {
             } catch (UnknownCommandException e) {
                 System.out.println("This command was not programmed in me...=O\n");
             } catch (InsufficientDescriptionException e) {
-                e.printStackTrace();
-            } catch (InvalidTaskNumber invalidTaskNumber) {
                 System.out.println("Hmmm....You didn't add any details...\n");
+            } catch (InvalidTaskNumber invalidTaskNumber) {
+                System.out.println("Invalid Task Number!!!\n");
             } catch (EmptyListException e) {
                 System.out.println("Empty list. Add something!\n");
             } catch (IOException e) {
