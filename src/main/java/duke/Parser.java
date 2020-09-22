@@ -4,6 +4,9 @@ package duke;
 import duke.tasks.*;
 import duke.exceptions.*;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static duke.Duke.listCounter;
 import static duke.Storage.*;
@@ -15,7 +18,8 @@ public class Parser {
     public final static int EVENT_INTEGER = 2;
 
 
-    public static void parse(String input,TaskList tasks) throws UnknownCommandException, EmptyListException, InvalidTaskNumber, InsufficientDescriptionException, IOException {
+    public static void parse(String input,TaskList tasks) throws UnknownCommandException, EmptyListException,
+            InvalidTaskNumber, InsufficientDescriptionException, IOException, InvalidDateTimeException {
 
         String[] command = input.split(" ",2);
         System.out.println("____________________________________________________________\n");
@@ -36,12 +40,16 @@ public class Parser {
         case "deadline":
             deadlineCommand(command[1],tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
-            appendFile("tasks.txt", translateIntoText(DEADLINE_INTEGER,boolToNumber, command[1]));
+            String[] description = command[1].split("/by ");
+            description[1] = formatDateTime(description[1]);
+            appendFile("tasks.txt", translateIntoText(DEADLINE_INTEGER,boolToNumber, description[0] + "/by " + description[1]));
             break;
         case "event":
             eventCommand(command[1],tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
-            appendFile("tasks.txt", translateIntoText(EVENT_INTEGER,boolToNumber, command[1]));
+            description = command[1].split("/at ");
+            description[1] = formatDateTime(description[1]);
+            appendFile("tasks.txt", translateIntoText(EVENT_INTEGER,boolToNumber, description[0] + "/at " + description[1]));
             break;
         case "delete":
             taskNumber = Integer.parseInt(command[1]);
@@ -118,13 +126,14 @@ public class Parser {
 
     }
 
-    private static void deadlineCommand(String input, TaskList tasks) throws InsufficientDescriptionException {
+    private static void deadlineCommand(String input, TaskList tasks) throws InsufficientDescriptionException, InvalidDateTimeException {
 
         String[] description = input.split("/by ");         // finds index of /by
 
         if (description.length == 1 || description[1].isEmpty()) {          // no /by found
             throw new InsufficientDescriptionException();
         } else {
+            description[1] = formatDateTime(description[1]);
             tasks.add(new Deadline(description[0], description[1]));
             System.out.println("Got it. I've added this task: \n" +
                     tasks.get(listCounter) +
@@ -133,13 +142,14 @@ public class Parser {
         }
     }
 
-    private static void eventCommand(String input, TaskList tasks) throws InsufficientDescriptionException{
+    private static void eventCommand(String input, TaskList tasks) throws InsufficientDescriptionException, InvalidDateTimeException {
 
         String[] description = input.split("/at ");      // finds index of /at
 
         if (description.length == 1 || description[1].isEmpty()) {
             throw new InsufficientDescriptionException();
         } else {
+            description[1] = formatDateTime(description[1]);
             tasks.add(new Event(description[0], description[1]));
             System.out.println("Got it. I've added this task: \n" +
                     tasks.get(listCounter) +
@@ -182,6 +192,29 @@ public class Parser {
             } else {
                 System.out.println("No matches found...\n");
             }
+        }
+    }
+
+
+    private static String formatDateTime(String input) throws InvalidDateTimeException {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("E, MMM dd yyyy");
+        SimpleDateFormat inputDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HHmm");
+        SimpleDateFormat outputDateTimeFormat = new SimpleDateFormat("E, MMM dd yyyy, h:mm a");
+        String[] dateTime = input.split(" ");
+        String reformattedDateTime;
+
+        try {
+            if (dateTime.length == 1 || dateTime[1].isEmpty()) {        // only date
+                Date _date = inputDateFormat.parse(input);
+                reformattedDateTime = outputDateFormat.format(_date);
+            } else {
+                Date _date = inputDateTimeFormat.parse(input);
+                reformattedDateTime = outputDateTimeFormat.format(_date);
+            }
+            return reformattedDateTime;
+        } catch (ParseException e) {
+            throw new InvalidDateTimeException();
         }
     }
 
