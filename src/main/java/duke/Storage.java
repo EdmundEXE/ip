@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 import static duke.Duke.listCounter;
+import static duke.Parser.translateIntoText;
 
 
 public class Storage {
@@ -62,7 +63,7 @@ public class Storage {
                         break;
                     }
                 }
-
+                s.close();
                 System.out.println("____________________________________________________________\n");
             }
         }  catch (IOException e) {
@@ -76,6 +77,41 @@ public class Storage {
         FileWriter fw = new FileWriter(pathName, true);
         fw.write("\n" + textToAdd);
         fw.close();
+    }
+
+    public static void delete(TaskList tasks) throws IOException {
+        File temp = new File("temp.txt");
+        temp.createNewFile();
+        File original = new File("tasks.txt");
+        String s2;
+        int mode;
+
+        for (int i = 0; i < listCounter; i++) {
+            String s1 = String.valueOf(tasks.get(i)).substring(1, 2);
+            int boolToNumber = tasks.get(i).getIsDone() ? 1 : 0;
+
+
+            switch (s1) {
+            case "T":       // [T][?] blabla
+                s2 = tasks.get(i).toString().substring(6);
+                mode = 0;
+                break;
+            case "D":        // E or D
+                s2 = tasks.get(i).toString().substring(6).replace("by:", "/by");
+                mode = 1;
+                break;
+            default:
+                s2 = tasks.get(i).toString().substring(6).replace("at:", "/at");
+                mode = 2;
+                break;
+            }
+
+            appendFile("temp.txt", translateIntoText(mode,boolToNumber,s2));
+        }
+        original.delete();
+        temp.renameTo(original);
+
+
     }
 
 

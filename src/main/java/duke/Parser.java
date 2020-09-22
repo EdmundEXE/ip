@@ -3,7 +3,6 @@ package duke;
 
 import duke.tasks.*;
 import duke.exceptions.*;
-import java.io.File;
 import java.io.IOException;
 
 import static duke.Duke.listCounter;
@@ -47,37 +46,7 @@ public class Parser {
         case "delete":
             taskNumber = Integer.parseInt(command[1]);
             deleteCommand(taskNumber,tasks);
-            File temp = new File("temp.txt");
-            temp.createNewFile();
-            File original = new File("tasks.txt");
-            String s2;
-            int mode;
-
-            for (int i = 0; i < listCounter; i++) {
-                String s1 = String.valueOf(tasks.get(i)).substring(1, 2);
-                boolToNumber = tasks.get(i).getIsDone() ? 1 : 0;
-
-
-                switch (s1) {
-                case "T":       // [T][?] blabla
-                    s2 = tasks.get(i).toString().substring(6);
-                    mode = 0;
-                    break;
-                case "D":        // E or D
-                    s2 = tasks.get(i).toString().substring(6).replace("by:", "/by");
-                    mode = 1;
-                    break;
-                default:
-                    s2 = tasks.get(i).toString().substring(6).replace("at:", "/at");
-                    mode = 2;
-                    break;
-                }
-
-                appendFile("temp.txt", translateIntoText(mode,boolToNumber,s2));
-            }
-            original.delete();
-            temp.renameTo(original);
-
+            Storage.delete(tasks);
             break;
         case "bye":
             byeCommand();
@@ -87,7 +56,7 @@ public class Parser {
         }
     }
 
-    private static String translateIntoText(int mode, int boolToNumber, String description) {
+    public static String translateIntoText(int mode, int boolToNumber, String description) {
 
         switch (mode) {
         case 0:         // to do
