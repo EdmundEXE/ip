@@ -42,6 +42,9 @@ public class Duke {
                 System.out.println("Empty list. Add something!\n");
             } catch (IOException e) {
                 System.out.println("Unable to write to file!\n");
+            } catch (InvalidDateTimeException e) {
+                System.out.println("Please follow this date time format:\n" +
+                        "yyyy-mm-dd HHmm (24H)\n");
             } finally {
                 System.out.println("____________________________________________________________\n");
             }
