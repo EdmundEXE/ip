@@ -3,6 +3,10 @@ package duke;
 
 import java.util.Scanner;
 
+/**
+ * A class that prints out messages and errors by Duke
+ * and scans for inputs
+ */
 public class Ui {
     private static Scanner s = new Scanner(System.in);
 
@@ -23,6 +27,31 @@ public class Ui {
     public void showLoadingError() {
         System.out.println("____________________________________________________________\n" +
                 " Cannot load task.txt... Creating one...");
+    }
+
+    public void showUnknownCommand() {
+        System.out.println("This command was not programmed in me...=O\n");
+    }
+
+    public void showInvalidDescription() {
+        System.out.println("Hmmm....You didn't add any details...\n");
+    }
+
+    public void showInvalidTaskNumber() {
+        System.out.println("Invalid Task Number!!!\n");
+    }
+
+    public void showEmptyList() {
+        System.out.println("Empty list. Add something!\n");
+    }
+
+    public void showIO() {
+        System.out.println("Unable to write to file!\n");
+    }
+
+    public void showInvalidDateTime() {
+        System.out.println("Please follow this date time format:\n" +
+                "yyyy-mm-dd HHmm (24H)\n");
     }
 
     public String inputCommand() {

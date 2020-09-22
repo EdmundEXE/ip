@@ -1,14 +1,17 @@
 package duke;
 
 import duke.tasks.Task;
-
 import java.util.ArrayList;
 
+
+/**
+ * A class to store the various tasks inputted by the user with the
+ * ability to modify the list
+ */
 public class TaskList {
     private final ArrayList<Task> tasks;
 
     public TaskList(ArrayList<Task> tasks) {
-
         this.tasks = tasks;
     }
 

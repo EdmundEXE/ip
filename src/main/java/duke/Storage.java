@@ -9,7 +9,9 @@ import java.io.IOException;
 import static duke.Duke.listCounter;
 import static duke.Parser.translateIntoText;
 
-
+/**
+ * A class that stores tasks into a text file and loads the tasks from a text file
+ */
 public class Storage {
     private String pathName;
 
@@ -17,6 +19,11 @@ public class Storage {
         this.pathName = pathName;
     }
 
+    /**
+     * Returns the list of tasks loaded from the text file
+     *
+     * @return list of tasks converted from the text file
+     */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
@@ -72,13 +79,17 @@ public class Storage {
         return tasks;
     }
 
-
     public static void appendFile(String pathName, String textToAdd) throws IOException {
         FileWriter fw = new FileWriter(pathName, true);
         fw.write("\n" + textToAdd);
         fw.close();
     }
 
+    /**
+     * Replaces the original text file with new text file that has a task deleted
+     *
+     * @param tasks The current list of tasks.
+     */
     public static void delete(TaskList tasks) throws IOException {
         File temp = new File("temp.txt");
         temp.createNewFile();

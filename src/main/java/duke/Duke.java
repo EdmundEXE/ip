@@ -33,18 +33,17 @@ public class Duke {
                 String command = ui.inputCommand();
                 Parser.parse(command,tasks);
             } catch (UnknownCommandException e) {
-                System.out.println("This command was not programmed in me...=O\n");
+                ui.showUnknownCommand();
             } catch (InsufficientDescriptionException e) {
-                System.out.println("Hmmm....You didn't add any details...\n");
-            } catch (InvalidTaskNumber invalidTaskNumber) {
-                System.out.println("Invalid Task Number!!!\n");
+                ui.showInvalidDescription();
+            } catch (InvalidTaskNumberException invalidTaskNumber) {
+                ui.showInvalidTaskNumber();
             } catch (EmptyListException e) {
-                System.out.println("Empty list. Add something!\n");
+                ui.showEmptyList();
             } catch (IOException e) {
-                System.out.println("Unable to write to file!\n");
+                ui.showIO();
             } catch (InvalidDateTimeException e) {
-                System.out.println("Please follow this date time format:\n" +
-                        "yyyy-mm-dd HHmm (24H)\n");
+                ui.showInvalidDateTime();
             } finally {
                 System.out.println("____________________________________________________________\n");
             }
