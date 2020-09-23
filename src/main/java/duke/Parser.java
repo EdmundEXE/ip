@@ -258,7 +258,7 @@ public class Parser {
      * @throws InsufficientDescriptionException If no search item is inputted by the user.
      */
     private static void findCommand(String input, TaskList tasks) throws InsufficientDescriptionException{
-        if (input.length()<=6) {
+        if (input.length()==0) {
             throw new InsufficientDescriptionException();
         }
 
@@ -267,8 +267,6 @@ public class Parser {
             if (tasks.get(i).toString().contains(input)) {
                 System.out.println("Here are the matches found:\n");
                 System.out.println((j + 1) + "." + tasks.get(i));
-            } else {
-                System.out.println("No matches found...\n");
             }
         }
     }
