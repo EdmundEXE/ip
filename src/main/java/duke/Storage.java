@@ -13,10 +13,12 @@ import static duke.Parser.translateIntoText;
  * A class that stores tasks into a text file and loads the tasks from a text file
  */
 public class Storage {
-    private String pathName;
 
-    public Storage(String pathName) {
-        this.pathName = pathName;
+    private String filePath;
+
+    public Storage(String filePath) {
+
+        this.filePath = filePath;
     }
 
     /**

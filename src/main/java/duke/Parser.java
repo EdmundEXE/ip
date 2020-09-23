@@ -114,9 +114,9 @@ public class Parser {
      * @param tasks The list of tasks
      * @throws EmptyListException If the current list is empty.
      */
-    private static void listCommand(TaskList tasks) throws EmptyListException {   // show list
+    private static void listCommand(TaskList tasks) throws EmptyListException {
 
-        if (listCounter == 0) {         // Error: empty list
+        if (listCounter == 0) {         // empty list
             throw new EmptyListException();
         }
 
@@ -136,11 +136,11 @@ public class Parser {
      * @throws EmptyListException If the current list is empty.
      * @throws InvalidTaskNumberException If the user inputs an out of bounds number.
      */
-    private static void doneCommand(int taskNumber,TaskList tasks) throws EmptyListException, InvalidTaskNumberException {    // mark tick
+    private static void doneCommand(int taskNumber,TaskList tasks) throws EmptyListException, InvalidTaskNumberException {
 
-        if (listCounter == 0) {            // Error: empty list
+        if (listCounter == 0) {            // empty list
             throw new EmptyListException();
-        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
+        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // wrong task number
             throw new InvalidTaskNumberException();
         } else {
             tasks.get(taskNumber - 1).markAsDone();
@@ -180,9 +180,9 @@ public class Parser {
      */
     private static void deadlineCommand(String input, TaskList tasks) throws InsufficientDescriptionException, InvalidDateTimeException {
 
-        String[] description = input.split("/by ");         // finds index of /by
+        String[] description = input.split("/by ");         // divides the input into 2 parts
 
-        if (description.length == 1 || description[1].isEmpty()) {          // no /by found
+        if (description.length == 1 || description[1].isEmpty()) {
             throw new InsufficientDescriptionException();
         } else {
             description[1] = formatDateTime(description[1]);
@@ -204,7 +204,7 @@ public class Parser {
      */
     private static void eventCommand(String input, TaskList tasks) throws InsufficientDescriptionException, InvalidDateTimeException {
 
-        String[] description = input.split("/at ");      // finds index of /at
+        String[] description = input.split("/at ");      // divides the input into 2 parts
 
         if (description.length == 1 || description[1].isEmpty()) {
             throw new InsufficientDescriptionException();
@@ -229,9 +229,9 @@ public class Parser {
     private static void deleteCommand(int taskNumber, TaskList tasks) throws EmptyListException, InvalidTaskNumberException {
 
 
-        if (listCounter == 0) {            // Error: empty list
+        if (listCounter == 0) {            // empty list
             throw new EmptyListException();
-        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // Error: wrong task number
+        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // wrong task number
             throw new InvalidTaskNumberException();
         } else {
             System.out.println("Noted! I've removed this task:\n" +
@@ -288,7 +288,7 @@ public class Parser {
         String reformattedDateTime;
 
         try {
-            if (dateTime.length == 1 || dateTime[1].isEmpty()) {        // only date
+            if (dateTime.length == 1 || dateTime[1].isEmpty()) {        // only date is inputted by the user
                 Date _date = inputDateFormat.parse(input);
                 reformattedDateTime = outputDateFormat.format(_date);
             } else {
