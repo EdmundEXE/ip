@@ -40,7 +40,7 @@ Closes the program.
 ### "todo"
 
 Format: todo *title*
-
+Expected outcome:
 
 ![DukeToDo](https://user-images.githubusercontent.com/60436412/94020847-f4864600-fde5-11ea-9d7a-4c5bd948213a.PNG)
 
