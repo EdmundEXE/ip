@@ -41,7 +41,8 @@ Closes the program.
 
 Format: todo *title*
 
-Expected outcome:![DukeToDo](https://user-images.githubusercontent.com/60436412/94020847-f4864600-fde5-11ea-9d7a-4c5bd948213a.PNG)
+
+![DukeToDo](https://user-images.githubusercontent.com/60436412/94020847-f4864600-fde5-11ea-9d7a-4c5bd948213a.PNG)
 
 ### "deadline"
 
@@ -63,7 +64,10 @@ Expected outcome:![DukeEvent](https://user-images.githubusercontent.com/60436412
 
 Format: delete *taskNumber*
 
-Expected outcome:![DukeDelete](https://user-images.githubusercontent.com/60436412/94022007-39f74300-fde7-11ea-9227-74d273251365.PNG)
+Expected outcome:
+
+
+![DukeDelete](https://user-images.githubusercontent.com/60436412/94022007-39f74300-fde7-11ea-9227-74d273251365.PNG)
 
 ### "list"
 
