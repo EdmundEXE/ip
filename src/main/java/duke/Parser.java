@@ -37,7 +37,12 @@ public class Parser {
             InvalidTaskNumberException, InsufficientDescriptionException, IOException, InvalidDateTimeException {
 
         String[] command = input.split(" ",2);
+
         System.out.println("____________________________________________________________\n");
+
+        if (command.length == 1 || command[1].isEmpty()) {
+            throw new InsufficientDescriptionException();
+        }
 
         switch (command[0]) {
         case "list":

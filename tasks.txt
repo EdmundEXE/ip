@@ -1,4 +1,2 @@
 
-T | 0 |  patrolling
-D | 0 |  homework  | Sat, Oct 10 2020, 10:00 PM
-E | 0 |  basketball  | Sun, Oct 11 2020, 8:00 AM
+T | 0 | eat
