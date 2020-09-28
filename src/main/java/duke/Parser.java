@@ -285,11 +285,18 @@ public class Parser {
         }
 
         int j = 0;
+
         for (int i = 0; i < listCounter; i++) {
             if (tasks.get(i).toString().contains(input)) {
-                System.out.println("Here are the matches found:\n");
+                if (j==0) {
+                    System.out.println("Here are the matches found:\n");
+                }
                 System.out.println((j + 1) + "." + tasks.get(i));
+                j++;
             }
+        }
+        if (j==0) {
+            System.out.println("Hmmm... no matches found....");
         }
     }
 
