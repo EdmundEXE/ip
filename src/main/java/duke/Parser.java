@@ -40,24 +40,32 @@ public class Parser {
 
         System.out.println("____________________________________________________________\n");
 
-        if (command.length == 1 || command[1].isEmpty()) {
-            throw new InsufficientDescriptionException();
-        }
+
 
         switch (command[0]) {
         case "list":
             listCommand(tasks);
             break;
         case "done":
+            if (command.length == 1 || command[1].isEmpty()) {
+                throw new InsufficientDescriptionException();
+            }
             int taskNumber = Integer.parseInt(command[1]);
             doneCommand(taskNumber,tasks);
+            Storage.delete(tasks);
             break;
         case "todo":
+            if (command.length == 1 || command[1].isEmpty()) {
+                throw new InsufficientDescriptionException();
+            }
             todoCommand(command[1],tasks);
             int boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             appendFile("tasks.txt", translateIntoText(TASK_INTEGER,boolToNumber, command[1]));
             break;
         case "deadline":
+            if (command.length == 1 || command[1].isEmpty()) {
+                throw new InsufficientDescriptionException();
+            }
             deadlineCommand(command[1],tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             String[] description = command[1].split("/by ");
@@ -65,6 +73,9 @@ public class Parser {
             appendFile("tasks.txt", translateIntoText(DEADLINE_INTEGER,boolToNumber, description[0] + "/by " + description[1]));
             break;
         case "event":
+            if (command.length == 1 || command[1].isEmpty()) {
+                throw new InsufficientDescriptionException();
+            }
             eventCommand(command[1],tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             description = command[1].split("/at ");
@@ -72,11 +83,17 @@ public class Parser {
             appendFile("tasks.txt", translateIntoText(EVENT_INTEGER,boolToNumber, description[0] + "/at " + description[1]));
             break;
         case "delete":
+            if (command.length == 1 || command[1].isEmpty()) {
+                throw new InsufficientDescriptionException();
+            }
             taskNumber = Integer.parseInt(command[1]);
             deleteCommand(taskNumber,tasks);
             Storage.delete(tasks);
             break;
         case "find":
+            if (command.length == 1 || command[1].isEmpty()) {
+                throw new InsufficientDescriptionException();
+            }
             findCommand(command[1],tasks);
             break;
         case "bye":
