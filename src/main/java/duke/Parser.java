@@ -55,7 +55,7 @@ public class Parser {
             Storage.delete(tasks);
             break;
         case "todo":
-            if (command.length == 1 || command[1].isEmpty()) {
+            if (command.length == 1 || command[1].isEmpty() || command[1].trim().length()==0 ) {
                 throw new InsufficientDescriptionException();
             }
             todoCommand(command[1],tasks);
@@ -63,24 +63,26 @@ public class Parser {
             appendFile("tasks.txt", translateIntoText(TASK_INTEGER,boolToNumber, command[1]));
             break;
         case "deadline":
-            if (command.length == 1 || command[1].isEmpty()) {
+            if (command.length == 1 || command[1].isEmpty() || command[1].trim().startsWith("/by")) {
                 throw new InsufficientDescriptionException();
             }
             deadlineCommand(command[1],tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             String[] description = command[1].split("/by ");
             description[1] = formatDateTime(description[1]);
-            appendFile("tasks.txt", translateIntoText(DEADLINE_INTEGER,boolToNumber, description[0] + "/by " + description[1]));
+            appendFile("tasks.txt", translateIntoText(DEADLINE_INTEGER,boolToNumber, description[0] +
+                    "/by " + description[1]));
             break;
         case "event":
-            if (command.length == 1 || command[1].isEmpty()) {
+            if (command.length == 1 || command[1].isEmpty() || command[1].trim().startsWith("/at")) {
                 throw new InsufficientDescriptionException();
             }
             eventCommand(command[1],tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             description = command[1].split("/at ");
             description[1] = formatDateTime(description[1]);
-            appendFile("tasks.txt", translateIntoText(EVENT_INTEGER,boolToNumber, description[0] + "/at " + description[1]));
+            appendFile("tasks.txt", translateIntoText(EVENT_INTEGER,boolToNumber, description[0] +
+                    "/at " + description[1]));
             break;
         case "delete":
             if (command.length == 1 || command[1].isEmpty()) {
@@ -158,7 +160,8 @@ public class Parser {
      * @throws EmptyListException If the current list is empty.
      * @throws InvalidTaskNumberException If the user inputs an out of bounds number.
      */
-    private static void doneCommand(int taskNumber,TaskList tasks) throws EmptyListException, InvalidTaskNumberException {
+    private static void doneCommand(int taskNumber,TaskList tasks) throws
+            EmptyListException, InvalidTaskNumberException {
 
         if (listCounter == 0) {            // empty list
             throw new EmptyListException();
@@ -200,7 +203,8 @@ public class Parser {
      * @throws InsufficientDescriptionException If the user input has missing details.
      * @throws InvalidDateTimeException If the format of date/time inputted by the user is of the wrong format
      */
-    private static void deadlineCommand(String input, TaskList tasks) throws InsufficientDescriptionException, InvalidDateTimeException {
+    private static void deadlineCommand(String input, TaskList tasks) throws
+            InsufficientDescriptionException, InvalidDateTimeException {
 
         String[] description = input.split("/by ");         // divides the input into 2 parts
 
@@ -224,7 +228,8 @@ public class Parser {
      * @throws InsufficientDescriptionException If the user input has missing details.
      * @throws InvalidDateTimeException If the format of date/time inputted by the user is of the wrong format
      */
-    private static void eventCommand(String input, TaskList tasks) throws InsufficientDescriptionException, InvalidDateTimeException {
+    private static void eventCommand(String input, TaskList tasks) throws
+            InsufficientDescriptionException, InvalidDateTimeException {
 
         String[] description = input.split("/at ");      // divides the input into 2 parts
 
@@ -248,8 +253,8 @@ public class Parser {
      * @throws EmptyListException If the current list is empty.
      * @throws InvalidTaskNumberException If the user inputs an out of bounds number.
      */
-    private static void deleteCommand(int taskNumber, TaskList tasks) throws EmptyListException, InvalidTaskNumberException {
-
+    private static void deleteCommand(int taskNumber, TaskList tasks) throws
+            EmptyListException, InvalidTaskNumberException {
 
         if (listCounter == 0) {            // empty list
             throw new EmptyListException();

@@ -39,7 +39,7 @@ public class Storage {
             } else {
                 Scanner s = new Scanner(f);
 
-                System.out.println("Here are the tasks on your list:\n");
+                System.out.println("Here are the tasks loaded to your list:\n");
 
                 while (s.hasNextLine()) {
                     String fileOutputLine = s.nextLine();
