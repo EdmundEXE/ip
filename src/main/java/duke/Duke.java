@@ -33,7 +33,7 @@ public class Duke {
                 ui.showUnknownCommand();
             } catch (InsufficientDescriptionException e) {
                 ui.showInvalidDescription();
-            } catch (InvalidTaskNumberException invalidTaskNumber) {
+            } catch (InvalidTaskNumberException | NumberFormatException invalidTaskNumber) {
                 ui.showInvalidTaskNumber();
             } catch (EmptyListException e) {
                 ui.showEmptyList();
