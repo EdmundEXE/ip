@@ -1,6 +1,5 @@
 package duke;
 
-
 import duke.tasks.*;
 import duke.exceptions.*;
 import java.io.IOException;
@@ -33,14 +32,11 @@ public class Parser {
      * @throws IOException If file cannot be written onto
      * @throws InvalidDateTimeException If format of date and time inputted by user and Duke is mismatched
      */
-    public static void parse(String input,TaskList tasks) throws UnknownCommandException, EmptyListException,
+    public static void parse(String input, TaskList tasks) throws UnknownCommandException, EmptyListException,
             InvalidTaskNumberException, InsufficientDescriptionException, IOException, InvalidDateTimeException {
 
         String[] command = input.split(" ",2);
-
         System.out.println("____________________________________________________________\n");
-
-
 
         switch (command[0]) {
         case "list":
@@ -51,14 +47,14 @@ public class Parser {
                 throw new InsufficientDescriptionException();
             }
             int taskNumber = Integer.parseInt(command[1]);
-            doneCommand(taskNumber,tasks);
+            doneCommand(taskNumber, tasks);
             Storage.delete(tasks);
             break;
         case "todo":
             if (command.length == 1 || command[1].isEmpty() || command[1].trim().length()==0 ) {
                 throw new InsufficientDescriptionException();
             }
-            todoCommand(command[1],tasks);
+            todoCommand(command[1], tasks);
             int boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             appendFile("tasks.txt", translateIntoText(TASK_INTEGER,boolToNumber, command[1]));
             break;
@@ -66,7 +62,7 @@ public class Parser {
             if (command.length == 1 || command[1].isEmpty() || command[1].trim().startsWith("/by")) {
                 throw new InsufficientDescriptionException();
             }
-            deadlineCommand(command[1],tasks);
+            deadlineCommand(command[1], tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             String[] description = command[1].split("/by ");
             description[1] = formatDateTime(description[1]);
@@ -77,7 +73,7 @@ public class Parser {
             if (command.length == 1 || command[1].isEmpty() || command[1].trim().startsWith("/at")) {
                 throw new InsufficientDescriptionException();
             }
-            eventCommand(command[1],tasks);
+            eventCommand(command[1], tasks);
             boolToNumber = tasks.get(listCounter-1).getIsDone() ? 1 : 0;
             description = command[1].split("/at ");
             description[1] = formatDateTime(description[1]);
@@ -89,14 +85,14 @@ public class Parser {
                 throw new InsufficientDescriptionException();
             }
             taskNumber = Integer.parseInt(command[1]);
-            deleteCommand(taskNumber,tasks);
+            deleteCommand(taskNumber, tasks);
             Storage.delete(tasks);
             break;
         case "find":
             if (command.length == 1 || command[1].isEmpty()) {
                 throw new InsufficientDescriptionException();
             }
-            findCommand(command[1],tasks);
+            findCommand(command[1], tasks);
             break;
         case "bye":
             byeCommand();
@@ -104,6 +100,7 @@ public class Parser {
         default :
             throw new UnknownCommandException();
         }
+
     }
 
     /**
@@ -115,7 +112,6 @@ public class Parser {
      * @return Formatted String.
      */
     public static String translateIntoText(int mode, int boolToNumber, String description) {
-
         switch (mode) {
         case 0:         // to do
             return "T | " + boolToNumber + " | " +  description;        // T | 1 | blabla
@@ -130,6 +126,7 @@ public class Parser {
             description = description.replace(")","");
             return "E | " + boolToNumber + " | " + description;         // E | 1 | blablabla | 3333
         }
+
     }
 
     /**
@@ -139,7 +136,6 @@ public class Parser {
      * @throws EmptyListException If the current list is empty.
      */
     private static void listCommand(TaskList tasks) throws EmptyListException {
-
         if (listCounter == 0) {         // empty list
             throw new EmptyListException();
         }
@@ -160,12 +156,12 @@ public class Parser {
      * @throws EmptyListException If the current list is empty.
      * @throws InvalidTaskNumberException If the user inputs an out of bounds number.
      */
-    private static void doneCommand(int taskNumber,TaskList tasks) throws
+    private static void doneCommand(int taskNumber, TaskList tasks) throws
             EmptyListException, InvalidTaskNumberException {
 
         if (listCounter == 0) {            // empty list
             throw new EmptyListException();
-        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // wrong task number
+        } else if ((taskNumber <= 0) || (taskNumber > listCounter)) {       // wrong task number
             throw new InvalidTaskNumberException();
         } else {
             tasks.get(taskNumber - 1).markAsDone();
@@ -173,6 +169,7 @@ public class Parser {
                     tasks.get(taskNumber - 1) +
                     "\n");
         }
+
     }
 
     /**
@@ -243,6 +240,7 @@ public class Parser {
                     "\nNow you have " + (listCounter + 1) + " tasks in the list.\n");
             listCounter++;
         }
+
     }
 
     /**
@@ -258,7 +256,7 @@ public class Parser {
 
         if (listCounter == 0) {            // empty list
             throw new EmptyListException();
-        } else if ((taskNumber <= 0) || (taskNumber > (listCounter))) {       // wrong task number
+        } else if ((taskNumber <= 0) || (taskNumber > listCounter)) {       // wrong task number
             throw new InvalidTaskNumberException();
         } else {
             System.out.println("Noted! I've removed this task:\n" +
@@ -288,7 +286,6 @@ public class Parser {
         if (input.length()==0) {
             throw new InsufficientDescriptionException();
         }
-
         int j = 0;
 
         for (int i = 0; i < listCounter; i++) {

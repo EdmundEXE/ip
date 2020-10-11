@@ -56,4 +56,5 @@ public class Ui {
     public String inputCommand() {
         return s.nextLine();
     }
+
 }

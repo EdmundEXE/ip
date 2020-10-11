@@ -1,9 +1,7 @@
 package duke;
 
 import duke.exceptions.*;
-
 import java.io.IOException;
-
 
 public class Duke {
 
@@ -11,8 +9,6 @@ public class Duke {
     private TaskList tasks;
     private Ui ui;
     public static int listCounter = 0;
-
-
 
     public Duke(String filePath) {
         ui = new Ui();
@@ -24,11 +20,12 @@ public class Duke {
             ui.showLoadingError();
             tasks = new TaskList();
         }
+
     }
 
     public void run() {
         ui.printStartMessage();
-        while(true) {
+        while (true) {
             try {
                 String command = ui.inputCommand();
                 Parser.parse(command,tasks);

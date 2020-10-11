@@ -79,6 +79,7 @@ public class Storage {
             System.out.println("Cannot create file!!!");
         }
         return tasks;
+
     }
 
     public static void appendFile(String pathName, String textToAdd) throws IOException {
@@ -103,7 +104,6 @@ public class Storage {
             String s1 = String.valueOf(tasks.get(i)).substring(1, 2);
             int boolToNumber = tasks.get(i).getIsDone() ? 1 : 0;
 
-
             switch (s1) {
             case "T":       // [T][?] blabla
                 s2 = tasks.get(i).toString().substring(6);
@@ -124,9 +124,6 @@ public class Storage {
         original.delete();
         temp.renameTo(original);
 
-
     }
-
-
 
 }
