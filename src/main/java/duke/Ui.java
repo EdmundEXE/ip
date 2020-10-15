@@ -9,6 +9,30 @@ import java.util.Scanner;
 public class Ui {
     private static Scanner s = new Scanner(System.in);
 
+    public static void printByeMessage() {
+        System.out.println("____________________________________________________________\n" +
+                "Bye. Hope to see you again soon!\n" +
+                "____________________________________________________________");
+    }
+
+    public static void showFoundMatchesMessage() {
+        System.out.println("Here are the matches found:\n");
+    }
+
+    public static void showNoMatchesMessage() {
+        System.out.println("Hmmm... no matches found....");
+    }
+
+    public static void showCreatingFileMessage() {
+        System.out.println("____________________________________________________________\n" +
+                "Cannot find file..... Creating one...\n" +
+                "____________________________________________________________\n");
+    }
+
+    public static void showLoadedTasksMessage() {
+        System.out.println("Here are the tasks loaded to your list:\n");
+    }
+
     public void printStartMessage() {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -55,6 +79,10 @@ public class Ui {
 
     public String inputCommand() {
         return s.nextLine();
+    }
+
+    public static void showTaskInListMessage() {
+        System.out.println("Here are the tasks in your list:");
     }
 
 }

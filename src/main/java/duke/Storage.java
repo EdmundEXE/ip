@@ -28,18 +28,18 @@ public class Storage {
      */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-        try {
+
             File f = new File("tasks.txt");
 
             if (!f.exists()) {
-                System.out.println("____________________________________________________________\n" +
-                        "Cannot find file..... Creating one...\n" +
-                        "____________________________________________________________\n");
-                f.createNewFile();
+                Ui.showCreatingFileMessage();
+                if (!f.createNewFile()) {
+                    throw new IOException();
+                }
+
             } else {
                 Scanner s = new Scanner(f);
-
-                System.out.println("Here are the tasks loaded to your list:\n");
+                Ui.showLoadedTasksMessage();
 
                 while (s.hasNextLine()) {
                     String fileOutputLine = s.nextLine();
@@ -75,9 +75,7 @@ public class Storage {
                 s.close();
                 System.out.println("____________________________________________________________\n");
             }
-        }  catch (IOException e) {
-            System.out.println("Cannot create file!!!");
-        }
+
         return tasks;
 
     }

@@ -1,3 +1,5 @@
 
-T | 1 |         eat
-E | 1 |         sing | Sun, Oct 11 2020, 12:00 AM
+T | 1 |  poll
+E | 0 |  poll  | Thu, Oct 22 2020, 1:00 AM
+E | 0 |  poll 3  | Wed, Dec 12 2029
+D | 0 |  poll  | Sun, Jan 23 0203, 7:00 AM

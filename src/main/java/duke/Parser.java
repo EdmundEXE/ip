@@ -140,7 +140,7 @@ public class Parser {
             throw new EmptyListException();
         }
 
-        System.out.println("Here are the tasks in your list:");
+        Ui.showTaskInListMessage();
 
         for (int i = 0; i < listCounter; i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
@@ -268,9 +268,7 @@ public class Parser {
     }
 
     private static void byeCommand() {
-        System.out.println("____________________________________________________________\n" +
-                "Bye. Hope to see you again soon!\n" +
-                "____________________________________________________________");
+        Ui.printByeMessage();
         System.exit(0);
 
     }
@@ -291,14 +289,14 @@ public class Parser {
         for (int i = 0; i < listCounter; i++) {
             if (tasks.get(i).toString().contains(input)) {
                 if (j==0) {
-                    System.out.println("Here are the matches found:\n");
+                    Ui.showFoundMatchesMessage();
                 }
                 System.out.println((j + 1) + "." + tasks.get(i));
                 j++;
             }
         }
         if (j==0) {
-            System.out.println("Hmmm... no matches found....");
+            Ui.showNoMatchesMessage();
         }
     }
 
